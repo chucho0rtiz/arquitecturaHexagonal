@@ -1,0 +1,9 @@
+CREATE TABLE PRODUCTS(
+    productId BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR NOT NULL,
+    description VARCHAR NOT NULL,
+    basePrice DECIMAL NOT NULL,
+    taxRate VARCHAR NOT NULL,
+    productStatus VARCHAR NOT NULL,
+    inventoryQuantity INTEGER NOT NULL
+);
