@@ -12,24 +12,33 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
-public class OrderPersistenceAdapter implements CreateOrderPort, FindAllOrderPort, FindOneOrderPort, DeleteOneOrderPort, UpdateOrderPort, CreateProductListPort {
+public class OrderPersistenceAdapter implements CreateOrderPort, DeleteOneOrderPort, UpdateOrderPort, CreateProductListPort, FindAllOrderPort, FindOneOrderPort {
 
     private final JdbcTemplate jdbcTemplate;
 
     // solo se esta usando en los metodos que realizan busqueda
     public final RowMapper<Order> rowMapper =(resultSet, i)->{
         Long id = resultSet.getLong("id");
+//        ArrayList<ProductList> productLists = new ArrayList<>();
+//        productLists.add(ProductList.of(
+//                resultSet.getLong("id"),
+//                resultSet.getInt("productid"),
+//                resultSet.getInt("orderid"),
+//                resultSet.getInt("cantidadProduct")
+//
+//        ));
         Cliente cliente = Cliente.of(resultSet.getString("cliente"));
         Descuento descuento = Descuento.of(resultSet.getBigDecimal("descuento"));
         Total total = Total.of(resultSet.getBigDecimal("total"));
         Estado estado = Estado.of(resultSet.getString("estado"));
-        return Order.of(id,  cliente, descuento, total, estado);
+        return Order.of(id, cliente, descuento, total, estado);
     };
 
     @Override
@@ -47,14 +56,16 @@ public class OrderPersistenceAdapter implements CreateOrderPort, FindAllOrderPor
         Number number = simpleJdbcInsert.executeAndReturnKey(parameters);
         Long id =number.longValue();
         Order data = Order.of(
-            id,
-            order.getCliente(),
-            order.getDescuento(),
-            order.getTotal(),
-            order.getEstado()
+                id,
+                order.getCliente(),
+                order.getDescuento(),
+                order.getTotal(),
+                order.getEstado()
         );
+
         return OrderOperationSuccess.of(data);
     }
+
     @Override
     public ProductList createProductList(ProductList productList) {
         String SQL = "INSERT INTO LIST_PRODUCTS (productid, orderid, cantidadProduct) VALUES (?,?,?)";

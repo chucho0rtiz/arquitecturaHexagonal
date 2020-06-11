@@ -1,7 +1,10 @@
 package co.com.ias.certification.backend.certification.application.domain.ordenes;
 
+import co.com.ias.certification.backend.certification.application.domain.productList.ProductList;
 import co.com.ias.certification.backend.common.Preconditions;
 import lombok.Value;
+
+import java.util.ArrayList;
 
 @Value(staticConstructor = "of")
 public class OrderOperationRequest {
