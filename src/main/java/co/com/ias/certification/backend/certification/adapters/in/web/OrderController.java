@@ -24,21 +24,11 @@ public class OrderController {
     private final FindOneOrderUseCase findOneOrderUseCase;
     private final UpdateOrderUseCase updateOrderUseCase;
     private final DeleteOrderUseCase deleteOrderUseCase;
-    private final CreateProductListUseCase createProductListUseCase;
+
 
     @PostMapping
     public OrderOperation create(@RequestBody OrderOperationRequest order) {
         return createOrderUseCase.createOrder(CreateOrderUseCase.CreateOrderCommand.of(order));
-    }
-//    private ProductList data = null;
-    @PostMapping("/listproduct")
-    public ResponseEntity<?> createListProduct(@RequestBody ArrayList<ProductList> productList) {
-            Map<String, Object> response = new HashMap<>();
-        for (int i = 0; i<productList.size(); i++){
-            createProductListUseCase.createProductList(CreateProductListUseCase.CreateProductListCommand.of((ProductList) productList.toArray()[i]));
-        }
-        response.put("message: los productos fueron registrados correctamente.", productList);
-        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping

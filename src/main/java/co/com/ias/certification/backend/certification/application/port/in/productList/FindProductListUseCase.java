@@ -4,11 +4,14 @@ import co.com.ias.certification.backend.certification.application.domain.product
 import co.com.ias.certification.backend.certification.application.domain.productList.ProductListOperation;
 import lombok.Value;
 
-public interface CreateProductListUseCase {
-    ProductListOperation createProductList(CreateProductListCommand command);
+import java.util.List;
+
+public interface FindProductListUseCase {
+    List<ProductList> findProductList(FindProducListCommand command);
 
     @Value(staticConstructor = "of")
-    class CreateProductListCommand {
-        ProductList productList;
+    class FindProducListCommand {
+        Long id;
     }
+
 }
