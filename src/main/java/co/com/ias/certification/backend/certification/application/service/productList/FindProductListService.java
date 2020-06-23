@@ -8,14 +8,29 @@ import co.com.ias.certification.backend.certification.application.port.in.produc
 import co.com.ias.certification.backend.certification.application.port.out.ordenes.FindOneOrderPort;
 import co.com.ias.certification.backend.certification.application.port.out.productList.FindProductListPort;
 import lombok.RequiredArgsConstructor;
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Component
 @RequiredArgsConstructor
 public class FindProductListService implements FindProductListUseCase {
     private final FindProductListPort findProductListPort;
+
+    @Override
+    public Boolean userHasPermission(KeycloakAuthenticationToken authenticationToken) {
+        AtomicBoolean acceso = new AtomicBoolean(false);
+        authenticationToken.getAccount().getRoles().forEach((e) -> {
+            if (!e.contains("CLIENTE")){
+                acceso.set(true);
+            }else {
+                acceso.set(false);
+            }
+        });
+        return acceso.get();
+    }
 
     @Override
     public List<ProductList> findProductList(FindProducListCommand command) {

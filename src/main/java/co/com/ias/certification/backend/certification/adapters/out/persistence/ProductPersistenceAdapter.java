@@ -3,6 +3,7 @@ package co.com.ias.certification.backend.certification.adapters.out.persistence;
 import co.com.ias.certification.backend.certification.application.domain.products.*;
 import co.com.ias.certification.backend.certification.application.port.out.products.*;
 import co.com.ias.certification.backend.certification.application.domain.products.exceptions.ProductDoesNotExists;
+import io.vavr.control.Try;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -33,30 +34,35 @@ public class ProductPersistenceAdapter implements CreateProductPort, FindAllProd
 
     @Override
     public ProductOperation createProduct(ProductOperationRequest product) {
-        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("PRODUCTS")
-                .usingGeneratedKeyColumns("productId");
 
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("name",product.getName().getValue());
-        parameters.put("description",product.getDescription().getValue());
-        parameters.put("basePrice",product.getBasePrice().getValue());
-        parameters.put("taxRate",product.getTaxRate().getValue());
-        parameters.put("productStatus",product.getProductStatus());
-        parameters.put("inventoryQuantity",product.getInventoryQuantity().getValue());
-        Number number = simpleJdbcInsert.executeAndReturnKey(parameters);
-        ProductId id = ProductId.of(number.longValue());
-        Product producto = Product.of(
-                id,
-                product.getName(),
-                product.getDescription(),
-                product.getBasePrice(),
-                product.getTaxRate(),
-                product.getProductStatus(),
-                product.getInventoryQuantity()
-        );
+//        return Try.of(() -> {
+            SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                            .withTableName("PRODUCTS")
+                            .usingGeneratedKeyColumns("productId");
 
-        return ProductOperationSuccess.of(producto);
+
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("name",product.getName().getValue());
+            parameters.put("description",product.getDescription().getValue());
+            parameters.put("basePrice",product.getBasePrice().getValue());
+            parameters.put("taxRate",product.getTaxRate().getValue());
+            parameters.put("productStatus",product.getProductStatus());
+            parameters.put("inventoryQuantity",product.getInventoryQuantity().getValue());
+            Number number = simpleJdbcInsert.executeAndReturnKey(parameters);
+            ProductId id = ProductId.of(number.longValue());
+
+            Product producto = Product.of(
+                    id,
+                    product.getName(),
+                    product.getDescription(),
+                    product.getBasePrice(),
+                    product.getTaxRate(),
+                    product.getProductStatus(),
+                    product.getInventoryQuantity()
+            );
+            return ProductOperationSuccess.of(producto);
+//        });
+//
     }
 
     @Override

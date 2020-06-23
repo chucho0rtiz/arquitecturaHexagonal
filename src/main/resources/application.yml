@@ -1,9 +1,9 @@
 keycloak:
   auth-server-url: http://localhost:8090/auth
-  realm: orders
+  realm: certificacionIAS
   resource: backend
   credentials:
-    secret: abeea4aa-cfc7-49e5-adf4-beffc8dc4a79
+    secret: 4f93d1b7-489a-4ec5-b8dc-ce71276ed2ce
 
 database:
   host: localhost
